@@ -8,6 +8,7 @@
 // }
 
 var username = prompt("What is your name?");
+var friendHash = {};
 
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
@@ -33,15 +34,23 @@ $(document).ready(function(){
   }); //end #submit
 
   setInterval(function(){
-    $.ajax('https://api.parse.com/1/classes/messages?order=-createdAt', {
+    $.ajax('https://api.parse.com/1/classes/messages', {
       contentType: 'application/json',
+      data: {
+        order: '-createdAt',
+        limit: '30'
+      },
       success: function(data){
         $('#container').html("");
         var input;
         console.log(data);
         $.each(data.results, function(i, value){
-          input = $('<div> ' + value.username + ' : ' + value.text + '</div>').text();
-          var toAppend = $('<div></div>').append(input);
+          var name = $('<span>' + value.username + '</span>').text();
+          name = $('<span>' + name + '</span>').addClass("name");
+          var txt = $('<span>' + value.text + '</span>').text();
+          txt = $('<span>: ' + txt + '</span>');
+          var toAppend = $('<div></div>').append(name).append(txt);
+          //if friendHash[value.username] = true addClass(friend), set .friend in CSS to be bold.
           $('#container').append(toAppend);
         });
       },
@@ -49,5 +58,5 @@ $(document).ready(function(){
         console.log('Ajax request failed');
       }
     }); //end ajax
-  }, 1000);
+  }, 2000);
 }); //end document.ready
