@@ -13,26 +13,35 @@ $.ajaxPrefilter(function(settings, _, jqXHR) {
   jqXHR.setRequestHeader("X-Parse-REST-API-Key", "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf");
 });
 
-$.ajax('https://api.parse.com/1/classes/messages?order=-createdAt', {
-  contentType: 'application/json',
-  success: function(data){
-    $.each(data.results, function(i, value){
-      //$('#main').append('<div> Message: ' + value.text + '</div>');
-    })
-    console.log(data);
-  },
-  error: function(data) {
-    console.log('Ajax request failed');
-  }
-});
+$(document).ready(function(){
+  $('#submit').on('click', function(){
+    var obj = {};
+    obj.text = $('#inputBox').val();
+    var message = JSON.stringify(obj);
+    $.ajax('https://api.parse.com/1/classes/messages', {
+      contentType: 'application/json',
+      type: 'POST',
+      data: message,
+      success: function(result) {
+          console.log('result: ',result);
+      }
+     });
+  }); //end #submit
 
-var message = JSON.stringify({text: "tyler mcginnis"});
-
-$.ajax('https://api.parse.com/1/classes/messages', {
-    contentType: 'application/json',
-    type: 'POST',
-    data: message,
-    success: function(result) {
-        console.log('result: ',result);
-    }
-});
+  setInterval(function(){
+    $.ajax('https://api.parse.com/1/classes/messages?order=-createdAt', {
+      contentType: 'application/json',
+      success: function(data){
+        $('#container').html("");
+        var input;
+        $.each(data.results, function(i, value){
+          input = $('<div> Message: ' + value.text + '</div>').text();
+          $('#container').append(input);
+        });
+      },
+      error: function(data) {
+        console.log('Ajax request failed');
+      }
+    }); //end ajax
+  }, 1000);
+}); //end document.ready
