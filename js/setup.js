@@ -25,14 +25,14 @@ $(document).ready(function(){
 
     var obj = {};
     //create chatroom
-  $('#chatRoomLeft').on('click', function(e){
+  $('#createChatRoom').on('click', function(e){
     e.preventDefault();
     obj.roomname = prompt("Enter a chat room name.");
-    $('#chatRoomRight').append('<option>'+ obj.roomname +'</option>');
+    $('#enterChatRoom').append('<option>'+ obj.roomname +'</option>');
   });
-  
+
   //enter a chatroom
-  $('#chatRoomRight').change( function(){
+  $('#enterChatRoom').change( function(){
       obj.roomname = $(this).find('option:selected').val();
   });
 

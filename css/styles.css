@@ -75,12 +75,12 @@ body {
     margin: 0px auto;
 }
 
-#chatRoomLeft{
+#createChatRoom{
     float: left;
     margin-right: 15px;
 }
 
-#chatRoomRight{
+#enterChatRoom{
     float: left;
     margin-left: 15px;
 }
