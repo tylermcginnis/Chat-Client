@@ -36,6 +36,7 @@ $(document).ready(function(){
           console.log('result: ',result);
       }
      });
+    $('#inputBox').val('');
   }); //end #submit
 
   setInterval(function(){
