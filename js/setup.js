@@ -17,6 +17,11 @@ $.ajaxPrefilter(function(settings, _, jqXHR) {
 });
 
 $(document).ready(function(){
+  $('#container').on('click', '.name', function(){
+    friendHash[this.innerHTML] = true;
+    console.log(friendHash);
+  });
+
   $('#submit').on('click', function(){
     var obj = {};
     obj.text = $('#inputBox').val();
@@ -50,7 +55,9 @@ $(document).ready(function(){
           var txt = $('<span>' + value.text + '</span>').text();
           txt = $('<span>: ' + txt + '</span>');
           var toAppend = $('<div></div>').append(name).append(txt);
-          //if friendHash[value.username] = true addClass(friend), set .friend in CSS to be bold.
+          if (friendHash[value.username]) {
+            toAppend.addClass("friend");
+          }
           $('#container').append(toAppend);
         });
       },

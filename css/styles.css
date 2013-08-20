@@ -42,19 +42,23 @@ body {
 }
 
 #inputBox {
-width: 200px;
-display: block;
-margin: 0px auto;
+    width: 200px;
+    display: block;
+    margin: 0px auto;
 }
 
 #submit {
-width: 155px;
-margin: 0px auto;
-display: block;
+    width: 155px;
+    margin: 0px auto;
+    display: block;
 }
 
 .name{
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.friend{
+    font-weight: bold;
 }
