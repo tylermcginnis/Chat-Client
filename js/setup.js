@@ -1,6 +1,6 @@
 //OTHER
 var obj = {};
-obj.username = prompt("What is your name?");
+obj.username = "CHANGE THIS LATER";//prompt("What is your name?");
 var friendHash = {};
 
 var setLink = function(){
@@ -12,6 +12,16 @@ var setLink = function(){
     }
     return link;
 };
+
+var Message = Backbone.Model.extend();
+
+var MessageView = Backbone.View.extend({
+  render: function(){
+    //var askjfn = this.model.get("")
+    return this.$el.text(this.model.get("text"));
+  }
+});
+
 //AJAX STUFF
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
@@ -54,8 +64,6 @@ $(document).ready(function(){
   $('#submit').on('click', function(){
     obj.text = $('#inputBox').val();
 
-
-
     addPost();
     $('#inputBox').val('');
   }); //end #submit
@@ -67,23 +75,37 @@ $(document).ready(function(){
         order: '-createdAt',
         limit: '30',
       },
-      success: function(data){
-        $('#container').html("");
+      success: function(response){ //replaced data with response
+        $('#container').html('');
         var input;
-        console.log(data);
-        $.each(data.results, function(i, value){
+
+        var messages = $.map(response.results, function(messageData){
+          return new Message(messageData);
+        });
+
+        var messageViews = $.map(messages, function(message){
+          return new MessageView({model: message});
+        });
+
+
+
+        $.each(response.results, function(i, value){
+          var message = new MessageView();
           var name = $('<span/>').text(value.username).text();
           name = $('<span/>').text(name).addClass("name");
           var txt = $('<span>' + value.text + '</span>').text();
           txt = $('<span/>').text(": "+txt);
+
           var toAppend = $('<div></div>').append(name).append(txt);
+
           if (friendHash[value.username]) {
             toAppend.addClass("friend");
           }
+
           $('#container').append(toAppend);
         });
       },
-      error: function(data) {
+      error: function(response) {
         console.log('Ajax request failed');
       }
     }); //end ajax
