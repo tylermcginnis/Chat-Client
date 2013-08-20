@@ -53,6 +53,12 @@ body {
     display: block;
 }
 
+#chatRoom {
+    width: 180px;
+    margin: 0px auto;
+    display: block;
+}
+
 .name{
     color: blue;
     text-decoration: underline;
@@ -61,4 +67,20 @@ body {
 
 .friend{
     font-weight: bold;
+}
+
+#chat {
+    width: 352px;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+#chatRoomLeft{
+    float: left;
+    margin-right: 15px;
+}
+
+#chatRoomRight{
+    float: left;
+    margin-left: 15px;
 }
