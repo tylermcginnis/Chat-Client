@@ -72,10 +72,10 @@ $(document).ready(function(){
         var input;
         console.log(data);
         $.each(data.results, function(i, value){
-          var name = $('<span>' + value.username + '</span>').text();
-          name = $('<span>' + name + '</span>').addClass("name");
+          var name = $('<span/>').text(value.username).text();
+          name = $('<span/>').text(name).addClass("name");
           var txt = $('<span>' + value.text + '</span>').text();
-          txt = $('<span>: ' + txt + '</span>');
+          txt = $('<span/>').text(": "+txt);
           var toAppend = $('<div></div>').append(name).append(txt);
           if (friendHash[value.username]) {
             toAppend.addClass("friend");
