@@ -10,6 +10,7 @@
 var username = prompt("What is your name?");
 var friendHash = {};
 
+
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
   jqXHR.setRequestHeader("X-Parse-Application-Id", "voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r");
@@ -22,13 +23,31 @@ $(document).ready(function(){
     console.log(friendHash);
   });
 
-  $('#submit').on('click', function(){
     var obj = {};
+    //create chatroom
+  $('#chatRoomLeft').on('click', function(e){
+    e.preventDefault();
+    obj.roomname = prompt("Enter a chat room name.");
+    $('#chatRoomRight').append('<option>'+ obj.roomname +'</option>');
+  });
+  
+  //enter a chatroom
+  $('#chatRoomRight').change( function(){
+      obj.roomname = $(this).find('option:selected').val();
+  });
+
+  $('#submit').on('click', function(){
     obj.text = $('#inputBox').val();
     obj.username = username;
 
     var message = JSON.stringify(obj);
-    $.ajax('https://api.parse.com/1/classes/messages', {
+    var link = "https://api.parse.com/1/classes/";
+    if(obj.roomname !== undefined){
+      link += obj.roomname;
+    } else {
+      link += "message";
+    }
+    $.ajax(link, {
       contentType: 'application/json',
       type: 'POST',
       data: message,
@@ -40,11 +59,17 @@ $(document).ready(function(){
   }); //end #submit
 
   setInterval(function(){
-    $.ajax('https://api.parse.com/1/classes/messages', {
+    var link = "https://api.parse.com/1/classes/";
+    if(obj.roomname !== undefined){
+      link += obj.roomname;
+    } else {
+      link += "message";
+    }
+    $.ajax(link, {
       contentType: 'application/json',
       data: {
         order: '-createdAt',
-        limit: '30'
+        limit: '30',
       },
       success: function(data){
         $('#container').html("");
