@@ -1,7 +1,17 @@
 //OTHER
-var username = prompt("What is your name?");
+var obj = {};
+obj.username = prompt("What is your name?");
 var friendHash = {};
 
+var setLink = function(){
+  var link = "https://api.parse.com/1/classes/";
+    if(obj.roomname !== undefined){
+      link += obj.roomname;
+    } else {
+      link += "message";
+    }
+    return link;
+};
 //AJAX STUFF
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
@@ -9,7 +19,16 @@ $.ajaxPrefilter(function(settings, _, jqXHR) {
   jqXHR.setRequestHeader("X-Parse-REST-API-Key", "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf");
 });
 
-
+var addPost = function(){
+  $.ajax(setLink(), {
+    contentType: 'application/json',
+    type: 'POST',
+    data: JSON.stringify(obj),
+    success: function(result) {
+      console.log('result: ',result);
+    }
+  });
+};
 
 //JQUERY STUFF
 
@@ -20,7 +39,6 @@ $(document).ready(function(){
     console.log(friendHash);
   });
 
-    var obj = {};
     //create chatroom
   $('#createChatRoom').on('click', function(e){
     e.preventDefault();
@@ -35,34 +53,15 @@ $(document).ready(function(){
 
   $('#submit').on('click', function(){
     obj.text = $('#inputBox').val();
-    obj.username = username;
 
-    var message = JSON.stringify(obj);
-    var link = "https://api.parse.com/1/classes/";
-    if(obj.roomname !== undefined){
-      link += obj.roomname;
-    } else {
-      link += "message";
-    }
-    $.ajax(link, {
-      contentType: 'application/json',
-      type: 'POST',
-      data: message,
-      success: function(result) {
-          console.log('result: ',result);
-      }
-     });
+
+
+    addPost();
     $('#inputBox').val('');
   }); //end #submit
 
   setInterval(function(){
-    var link = "https://api.parse.com/1/classes/";
-    if(obj.roomname !== undefined){
-      link += obj.roomname;
-    } else {
-      link += "message";
-    }
-    $.ajax(link, {
+    $.ajax(setLink(), {
       contentType: 'application/json',
       data: {
         order: '-createdAt',
