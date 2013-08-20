@@ -1,11 +1,13 @@
-if(!/(&|\?)username=/.test(window.location.search)){
-  var newSearch = window.location.search;
-  if(newSearch !== '' & newSearch !== '?'){
-    newSearch += '&';
-  }
-  newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
-  window.location.search = newSearch;
-}
+// if(!/(&|\?)username=/.test(window.location.search)){
+//   var newSearch = window.location.search;
+//   if(newSearch !== '' & newSearch !== '?'){
+//     newSearch += '&';
+//   }
+//   newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
+//   window.location.search = newSearch;
+// }
+
+var username = prompt("What is your name?");
 
 // Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
@@ -17,6 +19,8 @@ $(document).ready(function(){
   $('#submit').on('click', function(){
     var obj = {};
     obj.text = $('#inputBox').val();
+    obj.username = username;
+
     var message = JSON.stringify(obj);
     $.ajax('https://api.parse.com/1/classes/messages', {
       contentType: 'application/json',
@@ -34,9 +38,11 @@ $(document).ready(function(){
       success: function(data){
         $('#container').html("");
         var input;
+        console.log(data);
         $.each(data.results, function(i, value){
-          input = $('<div> Message: ' + value.text + '</div>').text();
-          $('#container').append(input);
+          input = $('<div> ' + value.username + ' : ' + value.text + '</div>').text();
+          var toAppend = $('<div></div>').append(input);
+          $('#container').append(toAppend);
         });
       },
       error: function(data) {
