@@ -1,6 +1,5 @@
-//OTHER
 var obj = {};
-obj.username = "CHANGE THIS LATER";//prompt("What is your name?");
+obj.username = prompt("What is your name?");
 var friendHash = {};
 
 var setLink = function(){
@@ -17,13 +16,17 @@ var Message = Backbone.Model.extend();
 
 var MessageView = Backbone.View.extend({
   render: function(){
-    //var askjfn = this.model.get("")
-    return this.$el.text(this.model.get("text"));
+    var name = $('<span/>').text(this.model.get("username")).addClass('name');
+    var txt = $('<span/>').text(": " +this.model.get("text"));
+    this.$el.append(name).append(txt);
+
+    if(friendHash[this.model.get("username")]) {
+      this.$el.addClass("friend");
+    }
+    return this.$el;
   }
 });
 
-//AJAX STUFF
-// Don't worry about this code, it will ensure that your ajax calls are allowed by the browser
 $.ajaxPrefilter(function(settings, _, jqXHR) {
   jqXHR.setRequestHeader("X-Parse-Application-Id", "voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r");
   jqXHR.setRequestHeader("X-Parse-REST-API-Key", "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf");
@@ -39,9 +42,6 @@ var addPost = function(){
     }
   });
 };
-
-//JQUERY STUFF
-
 
 $(document).ready(function(){
   $('#container').on('click', '.name', function(){
@@ -75,7 +75,7 @@ $(document).ready(function(){
         order: '-createdAt',
         limit: '30',
       },
-      success: function(response){ //replaced data with response
+      success: function(response){
         $('#container').html('');
         var input;
 
@@ -87,22 +87,8 @@ $(document).ready(function(){
           return new MessageView({model: message});
         });
 
-
-
-        $.each(response.results, function(i, value){
-          var message = new MessageView();
-          var name = $('<span/>').text(value.username).text();
-          name = $('<span/>').text(name).addClass("name");
-          var txt = $('<span>' + value.text + '</span>').text();
-          txt = $('<span/>').text(": "+txt);
-
-          var toAppend = $('<div></div>').append(name).append(txt);
-
-          if (friendHash[value.username]) {
-            toAppend.addClass("friend");
-          }
-
-          $('#container').append(toAppend);
+        $.map(messageViews, function(messageView){
+          $('#container').append(messageView.render());
         });
       },
       error: function(response) {
